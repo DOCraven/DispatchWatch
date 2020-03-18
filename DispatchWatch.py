@@ -86,6 +86,7 @@ def Downloader(CWD):
     download_folder = CWD + '\\DL' #where the folder gets downloaded to 
     
     ### STEP 2 - find files 
+    full_url = root + zip_file #concat the full url
     r = requests.get(URL) #open webpage
     soup = BeautifulSoup(r.text, 'lxml') #scrape webpage
     all_hrefs = soup.find_all('a') # find everything
@@ -94,6 +95,7 @@ def Downloader(CWD):
     
     ### STEP 3 - DOWNLOAD FILES 
     zip_file = zip_files[-1] #get last zip file in the from the list 
+
     zip_filename = os.path.basename(zip_file)
     dl_path = os.path.join(download_folder, zip_filename)
     with open(dl_path, 'wb') as z_file:
