@@ -112,6 +112,31 @@ def downloader():
 
     return #nothin 
 
+def zipper():
+    """UNZIPS all ZIPS in the given folder, then deletes zips"""
+    
+    ### STEP 1 - set up env
+    cwd = os.getcwd() + '\\'
+    DL = cwd + 'DL\\' #download dir
+    OUT = cwd + 'OUT\\'
+    files = fileScanner(DL) #find file 
+    
+    ### STEP 2 - unzip file
+    for zipName in files: #iterate through (single) file  
+        name = DL + zipName
+        
+        with zipfile.ZipFile(name, 'r') as zip_ref:
+            zip_ref.extractall(OUT)
+    
+    ### STEP 3 - delete zipped file you dont need
+        try: #delete file once unzipped
+            os.remove(name)
+        except (FileNotFoundError, PermissionError): 
+            pass
+    
+    
+    return #nothing 
+
 
 
 
@@ -145,7 +170,7 @@ def DispatchWatch():
     downloader() #download most recent upload from NEMWEB
 
     ### STEP 3 - unzip data, load into memory as csv
-    # Zipper()
+    zipper()
     
     ### STEP 4 - modify pd (will be the hard one)
     # Organiser()
