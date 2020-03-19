@@ -6,6 +6,7 @@ import os
 import requests
 import zipfile 
 import shutil
+import ctypes
 
 from datetime import datetime
 from bs4 import BeautifulSoup
@@ -22,10 +23,13 @@ from zipfile import ZipFile
 ##################
 #                #
 #                #
-#     V0.1.0     #
+#     V1.0.0     #
 #                #
 #                #
 ##################
+
+### Release Notes
+# V1.0.0 - Completed downloader and unzipper, added in pop up box to say its been downloaded
 
 ### PSEUDOCODE ####
 #scrape entire archive
@@ -120,6 +124,9 @@ def zipper():
     DL = cwd + 'DL\\' #download dir
     OUT = cwd + 'OUT\\'
     files = fileScanner(DL) #find file 
+
+    if not os.path.exists(OUT): #make OUTPUT folder if it does not exist
+        os.makedirs(OUT)
     
     ### STEP 2 - unzip file
     for zipName in files: #iterate through (single) file  
@@ -137,7 +144,8 @@ def zipper():
     
     return #nothing 
 
-
+def Mbox(title, text, style):
+    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 
 
 
@@ -162,10 +170,14 @@ def DispatchWatch():
 
     ### STEP 1 - set up the env
     ## VARS
-    
+
+    now = datetime.now() # get the time 
+    current_time = now.strftime("%H:%M")
     cwd = os.getcwd() #get current working dir
     DL = cwd + '\\DL'
+    OUT = cwd + '\\OUT'
     deleter(DL)
+    deleter(OUT)
     ### STEP 2 - download data
     downloader() #download most recent upload from NEMWEB
 
@@ -176,7 +188,8 @@ def DispatchWatch():
     # Organiser()
     
     
-
+    ### STEP N+1 - alert user that new file has been downloaded
+    Mbox('Dispatch Watch', 'A new 30 minute file is available\n' + 'The file is for: ' + str(current_time), 0)
     return #nothing 
 
 
