@@ -23,13 +23,14 @@ from zipfile import ZipFile
 ##################
 #                #
 #                #
-#     V1.0.0     #
+#     V1.0.1     #
 #                #
 #                #
 ##################
 
 ### Release Notes
 # V1.0.0 - Completed downloader and unzipper, added in pop up box to say its been downloaded
+# V1.0.1 - added in some stuff to make the batch file work 
 
 ### PSEUDOCODE ####
 #scrape entire archive
@@ -61,16 +62,18 @@ def deleter(folder):
     """
     Emptys the folder specified
     """
-    for filename in os.listdir(folder):
-        file_path = os.path.join(folder, filename)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-        except Exception as e:
-            print('Failed to delete %s. Reason: %s' % (file_path, e))    
-    
+    try: 
+        for filename in os.listdir(folder):
+            file_path = os.path.join(folder, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print('Failed to delete %s. Reason: %s' % (file_path, e))    
+    except FileNotFoundError:
+        pass    
 def fileScanner(path): 
     """ 
     this will scan all files in the root dir, subfolders, and return a list of file names
@@ -149,20 +152,6 @@ def Mbox(title, text, style):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #### MAIN #####
 
 def DispatchWatch():
@@ -178,6 +167,9 @@ def DispatchWatch():
     OUT = cwd + '\\OUT'
     deleter(DL)
     deleter(OUT)
+
+    msg = "A script to download specific dispatch data off NEMWEB\nPlease use windows scheduler to automate the timing"
+    print(msg)
     ### STEP 2 - download data
     downloader() #download most recent upload from NEMWEB
 
