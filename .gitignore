@@ -25,6 +25,7 @@
 *.log
 *.sql
 *.sqlite
+*.spec
 
 # OS generated files #
 ######################
@@ -40,3 +41,11 @@ Thumbs.db
 ######################
 /DL
 /OUT
+/build
+/__pycache__
+/.vscode
+
+# Project Specific Filetypes to ignore
+######################################
+*.CSV
+*.csv
