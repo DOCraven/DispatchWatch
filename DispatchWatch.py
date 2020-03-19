@@ -111,38 +111,38 @@ def downloader():
     full_url = root + zip_file #concat the full url
     r = requests.get(full_url)
     zip_filename = os.path.basename(zip_file)
-    dl_path = os.path.join(download_folder, zip_filename)
+    dl_path = os.path.join(cwd, zip_filename)
     with open(dl_path, 'wb') as z_file:
         z_file.write(r.content)
 
-
+    zipper(zip_filename) #unzip the zip file name
 
     return #nothin 
 
-def zipper():
+def zipper(name):
     """UNZIPS all ZIPS in the given folder, then deletes zips"""
     
     ### STEP 1 - set up env
     cwd = os.getcwd() + '\\'
     DL = cwd + 'DL\\' #download dir
-    OUT = cwd + 'OUT\\'
-    files = fileScanner(DL) #find file 
+    # OUT = cwd + 'OUT\\'
+    # files = fileScanner(DL) #find file 
 
-    if not os.path.exists(OUT): #make OUTPUT folder if it does not exist
-        os.makedirs(OUT)
+    # if not os.path.exists(OUT): #make OUTPUT folder if it does not exist
+    #     os.makedirs(OUT)
     
+
     ### STEP 2 - unzip file
-    for zipName in files: #iterate through (single) file  
-        name = DL + zipName
+    filename = cwd + name
         
-        with zipfile.ZipFile(name, 'r') as zip_ref:
-            zip_ref.extractall(OUT)
+    with zipfile.ZipFile(filename, 'r') as zip_ref:
+            zip_ref.extractall(cwd)
     
     ### STEP 3 - delete zipped file you dont need
-        try: #delete file once unzipped
-            os.remove(name)
-        except (FileNotFoundError, PermissionError): 
-            pass
+    try: #delete file once unzipped
+        os.remove(name)
+    except (FileNotFoundError, PermissionError): 
+        pass
     
     
     return #nothing 
@@ -164,17 +164,17 @@ def DispatchWatch():
     current_time = now.strftime("%H:%M")
     cwd = os.getcwd() #get current working dir
     DL = cwd + '\\DL'
-    OUT = cwd + '\\OUT'
+    # OUT = cwd + '\\OUT'
     deleter(DL)
-    deleter(OUT)
+    # deleter(OUT)
 
     msg = "A script to download specific dispatch data off NEMWEB\nPlease use windows scheduler to automate the timing"
     print(msg)
-    ### STEP 2 - download data
+    ### STEP 2 - download data and unzip it
     downloader() #download most recent upload from NEMWEB
 
     ### STEP 3 - unzip data, load into memory as csv
-    zipper()
+  
     
     ### STEP 4 - modify pd (will be the hard one)
     # Organiser()
